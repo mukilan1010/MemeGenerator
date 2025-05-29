@@ -71,6 +71,8 @@ function Dashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("previewImage");
+    localStorage.removeItem('memeEditorState');
     navigate("/login");
   };
 

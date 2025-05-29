@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 function SignupPage() {
   const [signupForm, setSignupForm] = useState({ 
     username: '', 
@@ -12,37 +13,36 @@ function SignupPage() {
     setSignupForm({ ...signupForm, [e.target.name]: e.target.value });
   };
 
-  const navigate=useNavigate();
-const signupUser = async (e) => {
-  e.preventDefault();
+  const navigate = useNavigate();
 
-  const { username, email, password, confirmPassword } = signupForm;
+  const signupUser = async (e) => {
+    e.preventDefault();
 
-  try {
-    const response = await fetch('http://localhost:5000/api/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password, confirmPassword }),
-    });
+    const { username, email, password, confirmPassword } = signupForm;
 
-    const data = await response.json();
+    try {
+      const response = await fetch('http://localhost:5000/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password, confirmPassword }),
+      });
 
-    if (response.ok) {
-      alert(data.message);
-      navigate('/login');
-    } else {
-      alert(data.error);
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message);
+        navigate('/login');
+      } else {
+        alert(data.error);
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      alert('Something went wrong during signup');
     }
-  } catch (error) {
-    console.error('Signup error:', error);
-    alert('Something went wrong during signup');
-  }
-};
-
-
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-800 relative overflow-hidden">
+<div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-800 relative overflow-hidden pt-20">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
@@ -69,22 +69,22 @@ const signupUser = async (e) => {
 
       <div className="relative z-10 flex items-center justify-center min-h-screen p-6">
         <div className="w-full max-w-md">
-          {/* Logo Section */}
-          <div className="text-center mb-8">
+          {/* Logo Section - aligned horizontally */}
+          <div className="flex items-center justify-center mb-8 space-x-4">
             <a href="/" className="inline-block">
-              <div className="flex justify-center mb-4">
-                <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 rounded-2xl flex items-center justify-center transform hover:rotate-12 transition-all duration-300 shadow-2xl shadow-blue-500/50">
-                    <span className="text-4xl font-black text-white">M</span>
-                  </div>
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 rounded-2xl flex items-center justify-center transform hover:rotate-12 transition-all duration-300 shadow-2xl shadow-blue-500/50">
+                  <span className="text-4xl font-black text-white">MM</span>
                 </div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
               </div>
             </a>
-            <h1 className="text-4xl font-black bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
-              MemeGen
-            </h1>
-            <p className="text-gray-400 text-sm">Create & Share Amazing Memes</p>
+            <div>
+              <h1 className="text-4xl font-black bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                MemeGen
+              </h1>
+              <p className="text-gray-400 text-sm">Create & Share Amazing Memes</p>
+            </div>
           </div>
 
           {/* Signup Form Container */}
@@ -195,22 +195,7 @@ const signupUser = async (e) => {
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-white/10"></div>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-800 text-gray-400">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-4">
-              <button className="group flex items-center justify-center px-4 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300 backdrop-blur-sm hover:border-white/20">
-                <span className="text-2xl mr-2">🌐</span>
-                <span className="text-white font-medium">Google</span>
-              </button>
-              <button className="group flex items-center justify-center px-4 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300 backdrop-blur-sm hover:border-white/20">
-                <span className="text-2xl mr-2">🐙</span>
-                <span className="text-white font-medium">GitHub</span>
-              </button>
+             
             </div>
           </div>
 

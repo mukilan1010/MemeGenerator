@@ -6,22 +6,27 @@ function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeItem, setActiveItem] = useState('home');
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(true); 
+  const [isInitialized, setIsInitialized] = useState(false);
   const navigate = useNavigate();
   const { user, logout, loading } = useAuth(); 
 
   const isLoggedIn = !!user;
 
-  console.log('Navbar render:', { user, loading, isLoggedIn, initialLoad });
-
+  // Wait for auth context to initialize
   useEffect(() => {
     if (!loading) {
-      const timer = setTimeout(() => {
-        setInitialLoad(false);
-      }, 100);
-      return () => clearTimeout(timer);
+      setIsInitialized(true);
     }
   }, [loading]);
+
+  console.log('Navbar render:', { 
+    user: user ? user.email : null, 
+    loading, 
+    isLoggedIn,
+    isInitialized,
+    shouldShowLogin: !loading && isInitialized && !isLoggedIn,
+    shouldShowProfile: !loading && isInitialized && isLoggedIn
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,6 +55,8 @@ function Navbar() {
   const handleLogout = () => {
     logout(); 
     setShowProfileDropdown(false);
+    localStorage.removeItem("previewImage");
+    localStorage.removeItem('memeEditorState');
     navigate('/');
   };
 
@@ -71,8 +78,8 @@ function Navbar() {
               onClick={() => setActiveItem('home')}
             >
               <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-all duration-300 shadow-lg shadow-purple-500/25">
-                  <span className="text-2xl font-black text-white">M</span>
+                <div className="w-14 h-14 bg-gradient-to-br from-cyan-400 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-all duration-300 shadow-lg shadow-purple-500/25">
+                  <span className="text-2xl font-black text-white">MM</span>
                 </div>
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
               </div>
@@ -114,7 +121,8 @@ function Navbar() {
 
             {/* Action Buttons + Profile */}
             <div className="flex items-center space-x-4 relative">
-              {!loading && !initialLoad && !isLoggedIn && (
+              {/* Only show login/signup if fully initialized, not loading, and not logged in */}
+              {!loading && isInitialized && !isLoggedIn && (
                 <>
                   <button
                     onClick={() => navigate("/login")}
@@ -131,14 +139,15 @@ function Navbar() {
                 </>
               )}
 
-              {(loading || initialLoad) && (
+              {/* Show loading spinner during loading or before initialization */}
+              {(loading || !isInitialized) && (
                 <div className="flex items-center space-x-2">
                   <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                 </div>
               )}
 
-              {/* Show Profile Icon if logged in */}
-              {!loading && !initialLoad && isLoggedIn && (
+              {/* Show Profile Icon if fully initialized, not loading, and logged in */}
+              {!loading && isInitialized && isLoggedIn && (
                 <div
                   className="relative ml-4 cursor-pointer profile-icon-container"
                   onClick={() => setShowProfileDropdown(!showProfileDropdown)}

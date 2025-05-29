@@ -11,8 +11,8 @@ function Create() {
   
   useEffect(() => {
     if (selectedImage) {
-    
-      navigate('/edit', { 
+    localStorage.setItem('previewImage',selectedImage);
+      navigate('/memeedit', { 
         state: { 
           image: selectedImage,
           source: activeOption 

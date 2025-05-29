@@ -16,7 +16,7 @@ function TemplateSelector({ setSelectedImage }) {
 
   const handleTemplateSelect = (url) => {
     setSelectedImage(url);
-    navigate("/editor"); 
+    navigate("/memeedit"); 
   };
 
   const filteredTemplates = templates.filter((template) =>
