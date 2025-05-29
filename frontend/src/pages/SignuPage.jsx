@@ -21,7 +21,7 @@ function SignupPage() {
     const { username, email, password, confirmPassword } = signupForm;
 
     try {
-      const response = await fetch('http://localhost:5000/api/signup', {
+      const response = await fetch('https://memegenerator-btv3.onrender.com/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password, confirmPassword }),

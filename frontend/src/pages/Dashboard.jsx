@@ -25,13 +25,13 @@ function Dashboard() {
 
       try {
         const [userRes, memesRes] = await Promise.all([
-          fetch("http://localhost:5000/api/user/me", {
+          fetch("https://memegenerator-btv3.onrender.com/api/user/me", {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           }),
-          fetch("http://localhost:5000/api/memes/my-memes", {
+          fetch("https://memegenerator-btv3.onrender.com/api/memes/my-memes", {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -46,17 +46,16 @@ function Dashboard() {
         const memesData = await memesRes.json();
 
         console.log("User:", userData);
-        console.log("Memes Data:", memesData); // Check what structure you're getting
+        console.log("Memes Data:", memesData); 
 
         setUser(userData);
 
-        // Fix: Handle the response structure properly
         if (memesData && memesData.memes && Array.isArray(memesData.memes)) {
           setMemes(memesData.memes);
         } else if (Array.isArray(memesData)) {
           setMemes(memesData);
         } else {
-          setMemes([]); // Fallback to empty array
+          setMemes([]); 
         }
       } catch (err) {
         console.error("Fetch error:", err);

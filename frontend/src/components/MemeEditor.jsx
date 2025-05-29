@@ -240,7 +240,7 @@ const saveCurrentState = () => {
       
       // Optional: Verify token with backend
       try {
-        const response = await fetch('http://localhost:5000/api/login', {
+        const response = await fetch('https://memegenerator-btv3.onrender.com/api/login', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -378,7 +378,7 @@ const clearDrawing = () => {
         createdAt: new Date().toISOString(),
       };
 
-      const response = await fetch('http://localhost:5000/api/memes', {
+      const response = await fetch('https://memegenerator-btv3.onrender.com/api/memes', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -476,10 +476,8 @@ const clearDrawing = () => {
       ctx.fillText(bottomText.toUpperCase(), canvas.width / 2, bottomY);
     }
 
-    // Convert canvas to data URL and save to database
     setTimeout(async () => {
       canvas.toBlob(async (blob) => {
-        // Convert blob to data URL for database storage
         const reader = new FileReader();
         reader.onload = async () => {
           const dataUrl = reader.result;
@@ -499,7 +497,6 @@ const clearDrawing = () => {
             
             alert('Meme saved and downloaded successfully!');
             
-            // Clear saved state after successful download
             localStorage.removeItem("previewImage");
             localStorage.removeItem('memeEditorState');
             navigate('/dashboard');
@@ -514,7 +511,7 @@ const clearDrawing = () => {
 
   const handleBackToCreate = () => {
     navigate('/create');
-    
+
   };
 
 const handleLoginRedirect = () => {

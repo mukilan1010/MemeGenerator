@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
     try {
       console.log('📡 AuthContext: Making API call to verify token...'); 
       
-      const response = await fetch('http://localhost:5000/api/user/me', {
+      const response = await fetch('https://memegenerator-btv3.onrender.com/api/user/me', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
