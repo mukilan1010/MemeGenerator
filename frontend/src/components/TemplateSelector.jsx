@@ -41,7 +41,7 @@ function TemplateSelector({ setSelectedImage }) {
   </p>
 
   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-    {filteredTemplates.slice(0, 50).map((template) => (
+    {filteredTemplates.slice(0, 100).map((template) => (
       <div
         key={template.id}
         className="rounded-md border-2 p-2 flex flex-col items-center"
