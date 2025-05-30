@@ -46,7 +46,6 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-cyan-50 relative overflow-hidden">
-      {/* Animated background elements - subtle for light theme */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-200/40 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-200/40 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -56,7 +55,6 @@ function Home() {
       <div className="relative z-10 pt-24 p-6 text-center">
         <div className="max-w-6xl mx-auto">
           
-          {/* Hero Section */}
           <div className="mb-20">
             <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm border border-white/40 rounded-full px-6 py-2 mb-8 shadow-lg">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -71,7 +69,6 @@ function Home() {
               or upload your own images for unlimited creativity.
             </p>
             
-            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
               <button 
                 onClick={handleGetStarted}
@@ -106,7 +103,6 @@ function Home() {
             </div>
           </div>
           
-          {/* Feature Cards */}
           <div className="mb-20">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">Why Choose MemeGen?</h2>
             <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
@@ -135,7 +131,6 @@ function Home() {
             </div>
           </div>
 
-          {/* How It Works Section */}
           <div className="mb-20">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">How It Works</h2>
             <p className="text-xl text-gray-600 mb-12">Create amazing memes in just 3 simple steps</p>
@@ -161,7 +156,6 @@ function Home() {
             </div>
           </div>
 
-          {/* Final CTA Section */}
           <div className="bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-cyan-500/10 backdrop-blur-sm border border-white/40 rounded-3xl p-12 shadow-2xl">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">Ready to Go Viral?</h2>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">

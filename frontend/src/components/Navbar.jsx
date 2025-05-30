@@ -139,14 +139,12 @@ function Navbar() {
                 </>
               )}
 
-              {/* Show loading spinner during loading or before initialization */}
               {(loading || !isInitialized) && (
                 <div className="flex items-center space-x-2">
                   <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                 </div>
               )}
 
-              {/* Show Profile Icon if fully initialized, not loading, and logged in */}
               {!loading && isInitialized && isLoggedIn && (
                 <div
                   className="relative ml-4 cursor-pointer profile-icon-container"

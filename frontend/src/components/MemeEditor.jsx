@@ -53,9 +53,7 @@ function MemeEditor({ image }) {
     }
   }, [loginCheckComplete]);
 
-  // Save state whenever it changes (regardless of login status)
 useEffect(() => {
-  // Only save if we have some content and login check is complete
   if (loginCheckComplete && (topText || bottomText || uploadedImages.length > 0 || imageData || drawingData)) {
     const currentState = {
       topText,
@@ -143,7 +141,6 @@ useEffect(() => {
     'Merriweather', 'Playfair Display', 'Dancing Script', 'Poppins', 'Nunito'
   ];
 
-  // Save current state to localStorage
 const saveCurrentState = () => {
   
   const canvas = drawingCanvasRef.current;
@@ -164,7 +161,7 @@ const saveCurrentState = () => {
       memePrompt,
       imageData,
       source,
-      drawingData: currentDrawingData, // Add this line
+      drawingData: currentDrawingData, 
       timestamp: Date.now()
     };
     localStorage.setItem('memeEditorState', JSON.stringify(currentState));
@@ -172,14 +169,12 @@ const saveCurrentState = () => {
   }
 };
 
-  // Restore meme state from localStorage
   const restoreMemeState = () => {
   const savedState = localStorage.getItem('memeEditorState');
   if (savedState) {
     try {
       const state = JSON.parse(savedState);
       
-      // Check if the saved state is recent (within 24 hours)
       const isRecent = state.timestamp && (Date.now() - state.timestamp) < 24 * 60 * 60 * 1000;
       
       if (isRecent) {
@@ -234,11 +229,9 @@ const saveCurrentState = () => {
         return;
       }
 
-      // Set basic logged in state
       setIsLoggedIn(true);
       setUser({ token });
       
-      // Optional: Verify token with backend
       try {
         const response = await fetch('https://memegenerator-btv3.onrender.com/api/login', {
           method: 'GET',
@@ -259,7 +252,6 @@ const saveCurrentState = () => {
           localStorage.removeItem('authToken');
         }
       } catch (verifyError) {
-        // If verification fails, but token exists, still allow login
         console.warn('Token verification failed, but proceeding with local token');
       }
     } catch (error) {
@@ -324,14 +316,12 @@ const saveCurrentState = () => {
 const stopDrawing = useCallback(() => {
   setIsDrawing(false);
   
-  // Save drawing state after drawing stops
   if (drawingCanvasRef.current) {
     const drawingDataUrl = drawingCanvasRef.current.toDataURL();
     setDrawingData(drawingDataUrl);
   }
 }, []);
 
-  // Handle uploaded image positioning
   const handleImageDrag = (imageId, e) => {
     if (currentTool !== 'image') return;
     
@@ -357,12 +347,10 @@ const clearDrawing = () => {
 };
 
 
-  // Remove uploaded image
   const removeImage = (imageId) => {
     setUploadedImages(prev => prev.filter(img => img.id !== imageId));
   };
 
-  // Save meme to database
   const saveMemeToDatabase = async (memeDataUrl) => {
     try {
       const token = localStorage.getItem('authToken');
