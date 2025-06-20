@@ -125,6 +125,8 @@ useEffect(() => {
     };
   }, []);
 
+  
+
 
   const canvasRef = useRef(null);
   const imgRef = useRef(null);
@@ -502,6 +504,31 @@ const clearDrawing = () => {
 
   };
 
+  const handleTouchStart = (e) => {
+  const touch = e.touches[0];
+  if (!touch) return;
+
+  const simulatedEvent = {
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+    preventDefault: () => e.preventDefault(),
+  };
+  startDrawing(simulatedEvent);
+};
+
+const handleTouchMove = (e) => {
+  const touch = e.touches[0];
+  if (!touch) return;
+
+  const simulatedEvent = {
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+    preventDefault: () => e.preventDefault(),
+  };
+  draw(simulatedEvent);
+};
+
+
 const handleLoginRedirect = () => {
   // Save current drawing canvas state
   if (drawingCanvasRef.current) {
@@ -850,19 +877,23 @@ return (
                   
                   {/* Drawing Canvas Overlay */}
                   <canvas
-                    ref={drawingCanvasRef}
-                    className="absolute top-3 left-3 right-3 bottom-3 rounded-lg cursor-crosshair"
-                    onMouseDown={startDrawing}
-                    onMouseMove={draw}
-                    onMouseUp={stopDrawing}
-                    onMouseLeave={stopDrawing}
-                    style={{ 
-                      pointerEvents: currentTool === 'draw' ? 'auto' : 'none',
-                      zIndex: currentTool === 'draw' ? 10 : 1,
-                      width: 'calc(100% - 1.5rem)',
-                      height: 'calc(100% - 1.5rem)'
-                    }}
-                  />
+  ref={drawingCanvasRef}
+  className="absolute top-3 left-3 right-3 bottom-3 rounded-lg cursor-crosshair touch-none"
+  onMouseDown={startDrawing}
+  onMouseMove={draw}
+  onMouseUp={stopDrawing}
+  onMouseLeave={stopDrawing}
+  onTouchStart={handleTouchStart}
+  onTouchMove={handleTouchMove}
+  onTouchEnd={stopDrawing}
+  style={{
+    pointerEvents: currentTool === 'draw' ? 'auto' : 'none',
+    zIndex: currentTool === 'draw' ? 10 : 1,
+    width: 'calc(100% - 1.5rem)',
+    height: 'calc(100% - 1.5rem)',
+  }}
+/>
+
                   
                   {/* Top Text */}
                   {topText && (
