@@ -7,26 +7,17 @@ function Navbar() {
   const [activeItem, setActiveItem] = useState('home');
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, logout, loading } = useAuth(); 
+  const { user, logout, loading } = useAuth();
 
   const isLoggedIn = !!user;
 
-  // Wait for auth context to initialize
   useEffect(() => {
     if (!loading) {
       setIsInitialized(true);
     }
   }, [loading]);
-
-  console.log('Navbar render:', { 
-    user: user ? user.email : null, 
-    loading, 
-    isLoggedIn,
-    isInitialized,
-    shouldShowLogin: !loading && isInitialized && !isLoggedIn,
-    shouldShowProfile: !loading && isInitialized && isLoggedIn
-  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,12 +44,44 @@ function Navbar() {
   }, [showProfileDropdown]);
 
   const handleLogout = () => {
-    logout(); 
+    logout();
     setShowProfileDropdown(false);
-    localStorage.removeItem("previewImage");
+    localStorage.removeItem('previewImage');
     localStorage.removeItem('memeEditorState');
     navigate('/');
   };
+
+  const navLinks = (isMobile = false) => (
+    <>
+      {[
+        { name: 'Home', path: '/', id: 'home', icon: '🏠' },
+        { name: 'Create', path: '/create', id: 'create', icon: '✨' },
+        { name: 'About', path: '/about', id: 'about', icon: '💫' },
+      ].map((item) => (
+        <Link
+          key={item.id}
+          to={item.path}
+          onClick={() => {
+            setActiveItem(item.id);
+            if (isMobile) setIsMobileMenuOpen(false);
+          }}
+          className={`relative px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 group ${
+            activeItem === item.id
+              ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-white shadow-lg shadow-cyan-500/10 border border-cyan-500/30'
+              : 'text-gray-300 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <span className="text-base group-hover:scale-110 transition-transform duration-200">
+            {item.icon}
+          </span>
+          <span>{item.name}</span>
+          {activeItem === item.id && (
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/10 to-purple-400/10 rounded-xl animate-pulse"></div>
+          )}
+        </Link>
+      ))}
+    </>
+  );
 
   return (
     <>
@@ -91,47 +114,33 @@ function Navbar() {
               </div>
             </Link>
 
-            {/* Navigation Links */}
-            <div className="flex items-center space-x-1 bg-black/20 backdrop-blur-sm rounded-2xl p-2 border border-white/10">
-              {[
-                { name: 'Home', path: '/', id: 'home', icon: '🏠' },
-                { name: 'Create', path: '/create', id: 'create', icon: '✨' },
-                { name: 'About', path: '/about', id: 'about', icon: '💫' }
-              ].map((item) => (
-                <Link
-                  key={item.id}
-                  to={item.path}
-                  onClick={() => setActiveItem(item.id)}
-                  className={`relative px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 group ${
-                    activeItem === item.id
-                      ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-white shadow-lg shadow-cyan-500/10 border border-cyan-500/30'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  <span className="text-base group-hover:scale-110 transition-transform duration-200">
-                    {item.icon}
-                  </span>
-                  <span>{item.name}</span>
-                  {activeItem === item.id && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/10 to-purple-400/10 rounded-xl animate-pulse"></div>
-                  )}
-                </Link>
-              ))}
+            {/* Mobile Toggle */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-white focus:outline-none text-2xl"
+              >
+                {isMobileMenuOpen ? '✖️' : '☰'}
+              </button>
             </div>
 
-            {/* Action Buttons + Profile */}
-            <div className="flex items-center space-x-4 relative">
-              {/* Only show login/signup if fully initialized, not loading, and not logged in */}
+            {/* Desktop Nav Links */}
+            <div className="hidden md:flex items-center space-x-1 bg-black/20 backdrop-blur-sm rounded-2xl p-2 border border-white/10">
+              {navLinks()}
+            </div>
+
+            {/* Profile / Auth Buttons (Desktop) */}
+            <div className="hidden md:flex items-center space-x-4 relative">
               {!loading && isInitialized && !isLoggedIn && (
                 <>
                   <button
-                    onClick={() => navigate("/login")}
+                    onClick={() => navigate('/login')}
                     className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
                   >
                     Login
                   </button>
                   <button
-                    onClick={() => navigate("/signup")}
+                    onClick={() => navigate('/signup')}
                     className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
                   >
                     Signup
@@ -177,8 +186,71 @@ function Navbar() {
               )}
             </div>
           </div>
+
+          {/* Mobile Nav Dropdown */}
+{isMobileMenuOpen && (
+  <div className="md:hidden mt-4 flex flex-col space-y-2 bg-black/30 p-4 rounded-xl border border-white/10">
+    {navLinks(true)}
+
+    {/* If NOT logged in: show Login / Signup */}
+    {!loading && isInitialized && !isLoggedIn && (
+      <>
+        <button
+          onClick={() => {
+            navigate('/login');
+            setIsMobileMenuOpen(false);
+          }}
+          className="w-full text-left px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+        >
+          Login
+        </button>
+        <button
+          onClick={() => {
+            navigate('/signup');
+            setIsMobileMenuOpen(false);
+          }}
+          className="w-full text-left px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+        >
+          Signup
+        </button>
+      </>
+    )}
+
+    {/* If logged in: show Profile / Logout */}
+    {!loading && isInitialized && isLoggedIn && (
+      <>
+        <div className="flex items-center gap-3 px-2 py-1 text-white font-semibold">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
+            {user.email?.charAt(0).toUpperCase()}
+          </div>
+          <div className="text-sm truncate">{user.email}</div>
+        </div>
+        <button
+          onClick={() => {
+            navigate('/dashboard');
+            setIsMobileMenuOpen(false);
+          }}
+          className="w-full text-left px-4 py-2 text-sm font-semibold text-white hover:bg-purple-600 rounded-md transition-all duration-200"
+        >
+          Profile
+        </button>
+        <button
+          onClick={() => {
+            handleLogout();
+            setIsMobileMenuOpen(false);
+          }}
+          className="w-full text-left px-4 py-2 text-sm font-semibold text-white hover:bg-purple-600 rounded-md transition-all duration-200"
+        >
+          Logout
+        </button>
+      </>
+    )}
+  </div>
+)}
+
         </div>
 
+        {/* Background Effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 left-1/4 w-32 h-32 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute top-0 right-1/4 w-24 h-24 bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
